@@ -32,6 +32,18 @@ void *customer(void *arg)
     strcpy(myName, argptr->name);
     myVTime = argptr->vTime;
     myRTime = argptr->rTime;
+
+    pthread_mutex_lock(&customer_lock);
+    while(nFreeNurses == 0)
+    {
+        //update counters and print customer is getting jab
+    }
+    pthread_mutex_unlock(&customer_lock);
+    sleep(myVTime);
+    pthread_mutex_lock(&customer_lock);
+        //update counters and print customer got vaccinated
+        //signal condition
+    pthread_mutex_unlock(&customer_lock);
 }
 
 int main()
