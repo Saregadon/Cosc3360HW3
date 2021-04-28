@@ -36,8 +36,9 @@ void *customer(void *arg)
     pthread_mutex_lock(&customer_lock);
     while(nFreeNurses == 0)
     {
-        //update counters and print customer is getting jab
+        //wait on condition
     }
+    //update counters and print customer is getting jab
     pthread_mutex_unlock(&customer_lock);
     sleep(myVTime);
     pthread_mutex_lock(&customer_lock);
