@@ -14,7 +14,8 @@ using namespace std;
 
 struct Arguments
 {
-    string name = NULL;
+    string cname;
+    Arguments* next = nullptr;
 };
 
 struct cust
@@ -64,7 +65,7 @@ int main()
     while(cin >> name >> elapsedtime >> waittime >> safetyprecaution)
     {
         sleep(elapsedtime);
-        strcpy(argList.name, name);
+        strcpy(argList->name, name);
         pthread_create(&tid[nThreads], NULL, customer, (void *) &argList);
         nThreads++;
     }
