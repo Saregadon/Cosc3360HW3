@@ -12,6 +12,8 @@
 
 using namespace std;
 
+static int nCustomers, nHadToWait;
+
 struct Arguments
 {
     string cname;
@@ -60,7 +62,7 @@ int main()
 
     string name;
 
-    int elapsedtime = 0, waittime = 0, safetyprecaution = 0;
+    int elapsedtime = 0, waittime = 0, safetyprecaution = 0, nThreads = 0;
 
     while(cin >> name >> elapsedtime >> waittime >> safetyprecaution)
     {
@@ -69,4 +71,6 @@ int main()
         pthread_create(&tid[nThreads], NULL, customer, (void *) &argList);
         nThreads++;
     }
+
+    return 0;
 }
