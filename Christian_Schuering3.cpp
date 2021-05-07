@@ -74,26 +74,53 @@ void *customer(void *arg)
     cout << argptr->cname << " leaves the center." << endl;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
     //ifstream input;
+    Arguments * head = nullptr;
     Arguments argList;
-    pthread_t tid;
+    pthread_t tid[NMAX];
 
-    //pthread_create(&tid,NULL,customer,(void*)custData);
-
-    pthread_join(tid, NULL);
+    pthread_mutex_init(&customer_lock, nullptr);
+    //pthread_join(tid[NMAX], NULL);
 
     int nThreads = 0;
 
+    if(argc > 2) //parsing in
+    {
+        cout << "Wrong number of arguments" << endl;
+        return 0;
+    }
+    else
+    {
+        int temp = stoi(argv[1]);
+        nThreads = temp;
+        nFreeNurses = temp;
+    }
+
+    ofstream fout("output.txt");
+    ifstream fin("input30.txt");
+    fin.open("input30.txt");
+
     while(cin >> argList.cname >> argList.elapsedtime >> argList.waittime >> argList.safetyprecaution)
     {
-        sleep(argList.elapsedtime);
-        char testname = (char)argList.cname;
-        strcpy(argList.cname.c_str(), name);
-        pthread_create(&tid[argList.nThreads], NULL, customer, (void *) &argList);
-        argList.nThreads++;
+        head = argList.next;
+    } //parsing in as a linked list
+
+    for(int i = 0; i < nThreads; i++)
+    {
+        sleep(argList.waittime);
+        pthread_create(&tid[i], nullptr, customer, (void*) &argList); //creates list
     }
+
+    for(int i = 0; i < nCustomers; i++) pthread_join(tid[i], nullptr); //joins together
+
+    //minutia
+    cout << nVacced << " customer(s) were vaccinated." << endl;
+    fout << nVacced << " customer(s) were vaccinated." << endl;
+
+    cout << nHadToWait << " people had to wait." << endl;
+    fout << nHadToWait << " people had to wait." << endl;
 
     return 0;
 }
