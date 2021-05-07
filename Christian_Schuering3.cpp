@@ -19,10 +19,10 @@ static pthread_mutex_t customer_lock;
 struct Arguments
 {
     string cname;
-    int elapsedtime = 0;
-    int waittime = 0;
-    int safetyprecaution = 0;
-    int nThreads = 0;
+    int elapsedtime = 0; //how much time has passed
+    int waittime = 0; //how much time until they can get a wait
+    int safetyprecaution = 0; //allergic reaction time
+    int nThreads = 0; //number people able to do it
     Arguments *next = nullptr;
 };
 
@@ -99,8 +99,8 @@ int main(int argc, char* argv[])
     }
 
     ofstream fout("output.txt");
-    ifstream fin("input30.txt");
-    fin.open("input30.txt");
+    //ifstream fin("input30.txt");
+    //fin.open("input30.txt");
 
     while(cin >> argList.cname >> argList.elapsedtime >> argList.waittime >> argList.safetyprecaution)
     {
