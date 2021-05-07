@@ -28,17 +28,33 @@ struct Arguments
 
 void *customer(void *arg)
 {
-    struct Arguments *argptr;
+    //struct Arguments *argptr;
     //char myName[NMAX];
     int myVTime, myRTime;
     int hasWaited = 0;
     Arguments* argptr = (Arguments *) arg;
     //strcpy(myName, argptr->cname);
-    myVTime = argptr->waittime;
-    myRTime = argptr->safetyprecaution;
+    myVTime = argptr->waittime; //wait time for getting into get vaccinated
+    myRTime = argptr->safetyprecaution; //time to wait after the customer has the shot
     cout << argptr->cname << " arrives at the center." << endl;
 
-    if(pthread_mutex_trylock(&customer_lock) )
+    if(pthread_mutex_trylock(&customer_lock) != 0)
+    {
+        cout << argptr->cname << " has to wait." << endl;
+        pthread_mutex_lock(&customer_lock);
+        nHadToWait++;
+        nFreeNurses--; //if customers != 0, has to wait so a nurse is also taken up
+    }
+
+    if(nFreeNurses > 0) //allows the pthread to unlock
+    {
+        pthread_mutex_unlock(&customer_lock);
+    }
+
+    cout << argptr->cname << " is getting the vaccine." << endl;
+    sleep(myVTime);
+    nVacced++;
+    cout << argptr->cname << " got vaccinated." << endl;
 
     pthread_mutex_lock(&customer_lock);
     if(nFreeNurses == 0)
