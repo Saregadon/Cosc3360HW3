@@ -10,6 +10,8 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#pragma GCC optimize "permissive"
+
 using namespace std;
 
 const int NMAX = 30; //name Max
