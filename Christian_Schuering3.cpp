@@ -56,19 +56,22 @@ void *customer(void *arg)
     nVacced++;
     cout << argptr->cname << " got vaccinated." << endl;
 
-    pthread_mutex_lock(&customer_lock);
+    //pthread_mutex_lock(&customer_lock);
     if(nFreeNurses == 0)
     {
         //wait on condition
         pthread_mutex_unlock(&customer_lock);
+        nFreeNurses++; //need free nurses
     }
+    
     //update counters and print customer is getting jab
-    pthread_mutex_unlock(&customer_lock);
-    sleep(myVTime);
-    pthread_mutex_lock(&customer_lock);
+    //pthread_mutex_unlock(&customer_lock);
+    sleep(myRTime); //allergic reaction trial time
+    //pthread_mutex_lock(&customer_lock);
         //update counters and print customer got vaccinated
         //signal condition
-    pthread_mutex_unlock(&customer_lock);
+    //pthread_mutex_unlock(&customer_lock);
+    cout << argptr->cname << " leaves the center." << endl;
 }
 
 int main()
