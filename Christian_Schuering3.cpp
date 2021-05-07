@@ -12,34 +12,39 @@
 
 using namespace std;
 
-static int nCustomers, nHadToWait;
+const int NMAX = 30; //name Max
+static int nCustomers, nHadToWait, nVacced, nFreeNurses;
+static pthread_mutex_t customer_lock;
 
 struct Arguments
 {
     string cname;
-    Arguments* next = nullptr;
-};
-
-struct cust
-{
-    //cData;
+    int elapsedtime = 0;
+    int waittime = 0;
+    int safetyprecaution = 0;
+    int nThreads = 0;
+    Arguments *next = nullptr;
 };
 
 void *customer(void *arg)
 {
-    struct custData *argptr;
-    char myName[MAXNAME];
+    struct Arguments *argptr;
+    //char myName[NMAX];
     int myVTime, myRTime;
     int hasWaited = 0;
-    argptr = (struct cutData *) arg;
-    strcpy(myName, argptr->name);
-    myVTime = argptr->vTime;
-    myRTime = argptr->rTime;
+    Arguments* argptr = (Arguments *) arg;
+    //strcpy(myName, argptr->cname);
+    myVTime = argptr->waittime;
+    myRTime = argptr->safetyprecaution;
+    cout << argptr->cname << " arrives at the center." << endl;
+
+    if(pthread_mutex_trylock(&customer_lock) )
 
     pthread_mutex_lock(&customer_lock);
-    while(nFreeNurses == 0)
+    if(nFreeNurses == 0)
     {
         //wait on condition
+        pthread_mutex_unlock(&customer_lock);
     }
     //update counters and print customer is getting jab
     pthread_mutex_unlock(&customer_lock);
@@ -60,16 +65,15 @@ int main()
 
     pthread_join(tid, NULL);
 
-    string name;
+    int nThreads = 0;
 
-    int elapsedtime = 0, waittime = 0, safetyprecaution = 0, nThreads = 0;
-
-    while(cin >> name >> elapsedtime >> waittime >> safetyprecaution)
+    while(cin >> argList.cname >> argList.elapsedtime >> argList.waittime >> argList.safetyprecaution)
     {
-        sleep(elapsedtime);
-        strcpy(argList->name, name);
-        pthread_create(&tid[nThreads], NULL, customer, (void *) &argList);
-        nThreads++;
+        sleep(argList.elapsedtime);
+        char testname = (char)argList.cname;
+        strcpy(argList.cname.c_str(), name);
+        pthread_create(&tid[argList.nThreads], NULL, customer, (void *) &argList);
+        argList.nThreads++;
     }
 
     return 0;
